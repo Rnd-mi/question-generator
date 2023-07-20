@@ -2,19 +2,22 @@ package ru.stepanov.skypro.coursework.examwebapp.services;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionNotFoundException;
 import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionIsAlreadyAdded;
+import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionNotFoundException;
 import ru.stepanov.skypro.coursework.examwebapp.model.Question;
 import ru.stepanov.skypro.coursework.examwebapp.repositories.QuestionRepository;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Random;
 
 @Service
-public class JavaQuestionService implements QuestionService {
+public class MathQuestionService implements QuestionService {
+
     private final QuestionRepository rep;
     private final Random random = new Random();
 
-    public JavaQuestionService(@Qualifier("javaQuestionRepository") QuestionRepository rep) {
+    public MathQuestionService(@Qualifier("mathQuestionRepository") QuestionRepository rep) {
         this.rep = rep;
     }
 
@@ -49,18 +52,6 @@ public class JavaQuestionService implements QuestionService {
 
     @Override
     public Question getRandomQuestion() {
-//        int left = 0;
-//        int right = random.nextInt(rep.size());
-//
-//        for (Question question : rep) {
-//
-//            if (left == right) {
-//                return question;
-//            }
-//            left++;
-//        }
-//        throw new RuntimeException();
-
         return rep.getAll().stream()
                 .skip(random.nextInt(rep.getAll().size()))
                 .findFirst()

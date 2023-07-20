@@ -10,19 +10,20 @@ import ru.stepanov.skypro.coursework.examwebapp.repositories.QuestionRepository;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static ru.stepanov.skypro.coursework.examwebapp.constants.Constants.*;
 
-class JavaQuestionServiceTest {
+class MathQuestionServiceTest {
     private QuestionRepository rep;
     private QuestionService out;
 
     @BeforeEach
     void init() {
         rep = mock(QuestionRepository.class);
-        out = new JavaQuestionService(rep);
+        out = new MathQuestionService(rep);
         when(rep.getAll()).thenReturn(generateSet());
     }
 
