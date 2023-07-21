@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import ru.stepanov.skypro.coursework.examwebapp.exceptions.InvalidAmountException;
 import ru.stepanov.skypro.coursework.examwebapp.model.Question;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,7 +28,6 @@ class ExaminerServiceImplTest {
     void testGetQuestions() {
         int amount = 2;
         when(javaMock.getAll()).thenReturn(generateJavaSet());
-        when(mathMock.getAll()).thenReturn(generateMathSet());
         when(mathMock.getRandomQuestion()).thenReturn(E1).thenReturn(E2);
         when(javaMock.getRandomQuestion()).thenReturn(E3).thenReturn(E4);
 
@@ -48,32 +46,24 @@ class ExaminerServiceImplTest {
     @Test
     void getQuestion_shouldThrowIfInvalidAmountAndViceVersa() {
         assertThrows(InvalidAmountException.class, () -> out.getQuestions(-10));
-        assertThrows(InvalidAmountException.class, () -> out.getQuestions(3));
-        verify(mathMock, times(2)).getAll();
+        assertThrows(InvalidAmountException.class, () -> out.getQuestions(0));
+        verify(mathMock, never()).getAll();
         verify(javaMock, never()).getRandomQuestion();
 
         when(javaMock.getAll()).thenReturn(generateJavaSet());
-        when(mathMock.getAll()).thenReturn(generateMathSet());
-        when(mathMock.getRandomQuestion()).thenReturn(E1).thenReturn(E2);
+        when(mathMock.getRandomQuestion()).thenReturn(E1).thenReturn(E2).thenReturn(E5).thenReturn(E6);
         when(javaMock.getRandomQuestion()).thenReturn(E3).thenReturn(E4);
 
         assertDoesNotThrow(() -> out.getQuestions(4));
 
-        verify(javaMock, times(2)).getRandomQuestion();
-        verify(mathMock, times(2)).getRandomQuestion();
+        verify(javaMock, atLeast(0)).getRandomQuestion();
+        verify(mathMock, atLeast(2)).getRandomQuestion();
     }
 
     private Set<Question> generateJavaSet() {
         return new HashSet<>() {{
             add(E1);
             add(E2);
-        }};
-    }
-
-    private Collection<Question> generateMathSet() {
-        return new HashSet<>() {{
-            add(E3);
-            add(E4);
         }};
     }
 }

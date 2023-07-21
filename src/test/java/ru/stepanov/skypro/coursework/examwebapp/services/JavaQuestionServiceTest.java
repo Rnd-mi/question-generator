@@ -2,7 +2,7 @@ package ru.stepanov.skypro.coursework.examwebapp.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionIsAlreadyAdded;
+import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionIsAlreadyAddedException;
 import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionNotFoundException;
 import ru.stepanov.skypro.coursework.examwebapp.model.Question;
 import ru.stepanov.skypro.coursework.examwebapp.repositories.QuestionRepository;
@@ -28,9 +28,9 @@ class JavaQuestionServiceTest {
 
     @Test
     void add_shouldThrowIfQuestionIsAlreadyIn() {
-        assertThrows(QuestionIsAlreadyAdded.class, () -> out.add(Q1, A1));
-        assertThrows(QuestionIsAlreadyAdded.class, () -> out.add(Q1, A2));
-        assertThrows(QuestionIsAlreadyAdded.class, () -> out.add(E1));
+        assertThrows(QuestionIsAlreadyAddedException.class, () -> out.add(Q1, A1));
+        assertThrows(QuestionIsAlreadyAddedException.class, () -> out.add(Q1, A2));
+        assertThrows(QuestionIsAlreadyAddedException.class, () -> out.add(E1));
     }
 
     @Test

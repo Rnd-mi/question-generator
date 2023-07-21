@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST,
                 reason = "Same question is in the list")
-public class QuestionIsAlreadyAdded extends RuntimeException {
-    public QuestionIsAlreadyAdded() {
+public class QuestionIsAlreadyAddedException extends RuntimeException {
+    public QuestionIsAlreadyAddedException() {
     }
 }

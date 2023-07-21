@@ -4,47 +4,39 @@ import org.springframework.stereotype.Service;
 import ru.stepanov.skypro.coursework.examwebapp.exceptions.InvalidAmountException;
 import ru.stepanov.skypro.coursework.examwebapp.model.Question;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ExaminerServiceImpl implements ExaminerService {
-    private final QuestionService mathQuestionService;
-    private final QuestionService javaQuestionService;
+
+    private final Map<String, QuestionService> services = new HashMap<>();
     private final Random random = new Random();
 
     public ExaminerServiceImpl(QuestionService mathQuestionService,
                                QuestionService javaQuestionService) {
-        this.mathQuestionService = mathQuestionService;
-        this.javaQuestionService = javaQuestionService;
+        services.put("math", mathQuestionService);
+        services.put("java", javaQuestionService);
     }
 
     @Override
     public Collection<Question> getQuestions(int amount) {
         amountCheck(amount);
         Set<Question> set = new HashSet<>();
-        int mathCounter = random.nextInt(mathSize() + 1);
+        int javaCounter = random.nextInt(javaSize() + 1);
 
-        if (amount <= mathSize()) {
-            mathCounter = random.nextInt(amount + 1);
+        if (javaSize() >= amount) {
+            javaCounter = random.nextInt(amount + 1);
         }
-        int javaCounter = amount - mathCounter;
-
-        while (javaCounter > javaSize()) {
-            mathCounter++;
-            javaCounter--;
-        }
+        int mathCounter = amount - javaCounter;
 
         while (mathCounter > 0) {
-            if (set.add(mathQuestionService.getRandomQuestion())) {
+            if (set.add(services.get("math").getRandomQuestion())) {
                 mathCounter--;
             }
         }
 
         while (javaCounter > 0) {
-            if (set.add(javaQuestionService.getRandomQuestion())) {
+            if (set.add(services.get("java").getRandomQuestion())) {
                 javaCounter--;
             }
         }
@@ -52,18 +44,12 @@ public class ExaminerServiceImpl implements ExaminerService {
     }
 
     private void amountCheck(int amount) {
-        int acceptableSize = javaSize() + mathSize();
-
-        if (amount > acceptableSize || amount <= 0) {
+        if (amount <= 0) {
             throw new InvalidAmountException();
         }
     }
 
-    private int mathSize() {
-        return mathQuestionService.getAll().size();
-    }
-
     private int javaSize() {
-        return javaQuestionService.getAll().size();
+        return services.get("java").getAll().size();
     }
 }

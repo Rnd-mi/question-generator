@@ -3,7 +3,7 @@ package ru.stepanov.skypro.coursework.examwebapp.services;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionNotFoundException;
-import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionIsAlreadyAdded;
+import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionIsAlreadyAddedException;
 import ru.stepanov.skypro.coursework.examwebapp.model.Question;
 import ru.stepanov.skypro.coursework.examwebapp.repositories.QuestionRepository;
 
@@ -27,7 +27,7 @@ public class JavaQuestionService implements QuestionService {
     @Override
     public Question add(Question question) {
         if (rep.getAll().contains(question)) {
-            throw new QuestionIsAlreadyAdded();
+            throw new QuestionIsAlreadyAddedException();
         }
 
         return rep.add(question);
