@@ -6,24 +6,28 @@ import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionIsAlreadyAdde
 import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionNotFoundException;
 import ru.stepanov.skypro.coursework.examwebapp.model.Question;
 import ru.stepanov.skypro.coursework.examwebapp.repositories.QuestionRepository;
+import ru.stepanov.skypro.coursework.examwebapp.services.java.JavaQuestionService;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 import static ru.stepanov.skypro.coursework.examwebapp.constants.Constants.*;
 
 class JavaQuestionServiceTest {
     private QuestionRepository rep;
     private QuestionService out;
+    private Random random;
 
     @BeforeEach
     void init() {
         rep = mock(QuestionRepository.class);
-        out = new JavaQuestionService(rep);
-        when(rep.getAll()).thenReturn(generateSet());
+        random = mock(Random.class);
+        out = new JavaQuestionService(rep, random);
+        when(rep.getAll()).thenReturn(generateList());
     }
 
     @Test
@@ -41,13 +45,33 @@ class JavaQuestionServiceTest {
 
     @Test
     void getRandomQuestion_shouldReturnPresentQuestion() {
-        String actual = out.getRandomQuestion().getQuestion();
-        String expected = Q1 + Q2 + Q3;
-        assertTrue(expected.contains(actual));
+        when(random.nextInt(anyInt()))
+                .thenReturn(0)
+                .thenReturn(1)
+                .thenReturn(2);
+
+        Question actual = out.getRandomQuestion();
+        Question actual2 = out.getRandomQuestion();
+        Question actual3 = out.getRandomQuestion();
+        assertEquals(E1, actual);
+        assertEquals(E2, actual2);
+        assertEquals(E3, actual3);
+        verify(random, times(3)).nextInt(anyInt());
     }
 
-    private Set<Question> generateSet() {
-        return new HashSet<>() {{
+    @Test
+    void testGetAll() {
+        List<Question> expected = new ArrayList<>() {{
+           add(E1);
+           add(E2);
+           add(E3);
+        }};
+        assertIterableEquals(expected, out.getAll());
+        assertEquals(expected.size(), out.getAll().size());
+    }
+
+    private List<Question> generateList() {
+        return new ArrayList<>() {{
             add(E1);
             add(E2);
             add(E3);
