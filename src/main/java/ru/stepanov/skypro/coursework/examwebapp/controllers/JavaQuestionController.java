@@ -1,6 +1,5 @@
 package ru.stepanov.skypro.coursework.examwebapp.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +14,7 @@ import java.util.Collection;
 @RequestMapping("/exam/java")
 public class JavaQuestionController {
     private final QuestionService questionService;
-    @Autowired
+
     public JavaQuestionController(@Qualifier("javaQuestionService") QuestionService questionService) {
         this.questionService = questionService;
     }

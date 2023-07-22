@@ -13,6 +13,7 @@ public class JavaQuestionRepository implements QuestionRepository {
     private final Set<Question> rep = new HashSet<>();
 
     public JavaQuestionRepository() {
+
     }
 
     @PostConstruct

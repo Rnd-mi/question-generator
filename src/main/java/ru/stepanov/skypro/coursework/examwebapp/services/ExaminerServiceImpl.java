@@ -1,5 +1,6 @@
 package ru.stepanov.skypro.coursework.examwebapp.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.stepanov.skypro.coursework.examwebapp.exceptions.InvalidAmountException;
 import ru.stepanov.skypro.coursework.examwebapp.model.Question;
@@ -8,20 +9,29 @@ import java.util.*;
 
 @Service
 public class ExaminerServiceImpl implements ExaminerService {
-
     private final Map<String, QuestionService> services = new HashMap<>();
-    private final Random random = new Random();
+    private final Random random;
 
+    @Autowired
     public ExaminerServiceImpl(QuestionService mathQuestionService,
                                QuestionService javaQuestionService) {
         services.put("math", mathQuestionService);
         services.put("java", javaQuestionService);
+        random = new Random();
+    }
+
+    public ExaminerServiceImpl(QuestionService mathQuestionService,
+                               QuestionService javaQuestionService,
+                               Random random) {
+        services.put("math", mathQuestionService);
+        services.put("java", javaQuestionService);
+        this.random = random;
     }
 
     @Override
     public Collection<Question> getQuestions(int amount) {
         amountCheck(amount);
-        Set<Question> set = new HashSet<>();
+        Set<Question> set = new LinkedHashSet<>();
         int javaCounter = random.nextInt(javaSize() + 1);
 
         if (javaSize() >= amount) {

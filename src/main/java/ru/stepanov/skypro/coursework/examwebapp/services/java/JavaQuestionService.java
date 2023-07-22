@@ -1,21 +1,31 @@
-package ru.stepanov.skypro.coursework.examwebapp.services;
+package ru.stepanov.skypro.coursework.examwebapp.services.java;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionNotFoundException;
 import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionIsAlreadyAddedException;
 import ru.stepanov.skypro.coursework.examwebapp.model.Question;
 import ru.stepanov.skypro.coursework.examwebapp.repositories.QuestionRepository;
+import ru.stepanov.skypro.coursework.examwebapp.services.QuestionService;
 
 import java.util.*;
 
 @Service
 public class JavaQuestionService implements QuestionService {
     private final QuestionRepository rep;
-    private final Random random = new Random();
+    private final Random random;
 
+    @Autowired
     public JavaQuestionService(@Qualifier("javaQuestionRepository") QuestionRepository rep) {
         this.rep = rep;
+        random = new Random();
+    }
+
+    public JavaQuestionService(@Qualifier("javaQuestionRepository") QuestionRepository rep,
+                               Random random) {
+        this.rep = rep;
+        this.random = random;
     }
 
     @Override
@@ -29,7 +39,6 @@ public class JavaQuestionService implements QuestionService {
         if (rep.getAll().contains(question)) {
             throw new QuestionIsAlreadyAddedException();
         }
-
         return rep.add(question);
     }
 
@@ -38,7 +47,6 @@ public class JavaQuestionService implements QuestionService {
         if (rep.getAll().contains(question)) {
             return rep.remove(question);
         }
-
         throw new QuestionNotFoundException();
     }
 
@@ -49,21 +57,7 @@ public class JavaQuestionService implements QuestionService {
 
     @Override
     public Question getRandomQuestion() {
-//        int left = 0;
-//        int right = random.nextInt(rep.size());
-//
-//        for (Question question : rep) {
-//
-//            if (left == right) {
-//                return question;
-//            }
-//            left++;
-//        }
-//        throw new RuntimeException();
-
-        return rep.getAll().stream()
-                .skip(random.nextInt(rep.getAll().size()))
-                .findFirst()
-                .get();
+        List<Question> list = new ArrayList<>(rep.getAll());
+        return list.get(random.nextInt(rep.getAll().size()));
     }
 }

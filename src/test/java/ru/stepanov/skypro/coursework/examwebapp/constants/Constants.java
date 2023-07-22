@@ -22,4 +22,8 @@ public class Constants {
     public static final Question E4 = new Question(Q4, A4);
     public static final Question E5 = new Question(Q5, A5);
     public static final Question E6 = new Question(Q6, A6);
+    public static final int BOUND_0_1 = 1001;
+    public static final int BOUND_2_3 = 21;
+    public static final int BOUND_4 = 10;
+    public static final int OPERATION = 4;
 }
