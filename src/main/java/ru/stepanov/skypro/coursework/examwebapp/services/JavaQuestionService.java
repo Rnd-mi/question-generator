@@ -1,27 +1,22 @@
 package ru.stepanov.skypro.coursework.examwebapp.services;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionNotFound;
-import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionIsAlreadyAdded;
+import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionNotFoundException;
+import ru.stepanov.skypro.coursework.examwebapp.exceptions.QuestionIsAlreadyAddedException;
 import ru.stepanov.skypro.coursework.examwebapp.model.Question;
+import ru.stepanov.skypro.coursework.examwebapp.repositories.QuestionRepository;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class JavaQuestionService implements QuestionService {
-    private final Set<Question> rep = new HashSet<>();
+    private final QuestionRepository rep;
     private final Random random = new Random();
 
-//    {
-//        add("say, what access modifiers there are?", "public, default, protected, private");
-//        add("decode the JVM abbreviation", "Java Virtual Machine");
-//        add("describe the polymorphism principle in java",
-//                "for example, invoking the particular method on different objects can lead to different actions");
-//        add("where the objects are stored", "in the heap memory");
-//    }
+    public JavaQuestionService(@Qualifier("javaQuestionRepository") QuestionRepository rep) {
+        this.rep = rep;
+    }
 
     @Override
     public Question add(String q, String a) {
@@ -31,23 +26,25 @@ public class JavaQuestionService implements QuestionService {
 
     @Override
     public Question add(Question question) {
-        if (!rep.add(question)) {
-            throw new QuestionIsAlreadyAdded();
+        if (rep.getAll().contains(question)) {
+            throw new QuestionIsAlreadyAddedException();
         }
-        return question;
+
+        return rep.add(question);
     }
 
     @Override
     public Question remove(Question question) {
-        if (!rep.remove(question)) {
-            throw new QuestionNotFound();
+        if (rep.getAll().contains(question)) {
+            return rep.remove(question);
         }
-        return question;
+
+        throw new QuestionNotFoundException();
     }
 
     @Override
     public Collection<Question> getAll() {
-        return rep;
+        return Collections.unmodifiableCollection(rep.getAll());
     }
 
     @Override
@@ -64,8 +61,8 @@ public class JavaQuestionService implements QuestionService {
 //        }
 //        throw new RuntimeException();
 
-        return rep.stream()
-                .skip(random.nextInt(rep.size()))
+        return rep.getAll().stream()
+                .skip(random.nextInt(rep.getAll().size()))
                 .findFirst()
                 .get();
     }
