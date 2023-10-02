@@ -3,7 +3,7 @@ Note: study project
 
 Features:
 ----
-- For storing questions HasSet and HashMap were used
+- For storing questions HashSet and HashMap were used
 - Can receive questions and save them in repository
 - User can request specific amount of questions and list will be generated containing questions randomly chosen from different subjects
 - All math questions are randomly generated
