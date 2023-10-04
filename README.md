@@ -10,6 +10,13 @@ Features:
 
 
 Stack:
+----
 - Java 11
 - Spring boot
 - Junit
+
+Endpoints:
+----
+- /exam/java/add (string params: question, answer);
+- /exam/java/remove (string params: question, answer);
+- exam/questions (int param: amount);
